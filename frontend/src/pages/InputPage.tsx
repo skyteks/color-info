@@ -1,8 +1,8 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import "./Form.css";
 import useAxiosAPI, { Result } from "../axiosAPI"
-import { useNavigate, useParams } from "react-router-dom";
-import Color, { checkStringForColorInfo } from "../Color";
+import { useNavigate } from "react-router-dom";
+import Color from "../../../Color";
 
 function InputPage({ colorValue, setColorValue }: { colorValue: Color | null, setColorValue: Function }) {
     const [formChanged, setFormChanged] = useState(false);
@@ -25,26 +25,39 @@ function InputPage({ colorValue, setColorValue }: { colorValue: Color | null, se
 
     function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault();
-        //postData();
 
-        try {
-            const newColor = checkStringForColorInfo(inputString);
-            setColorValue(newColor);
-            setResponseMessage("Success!");
-        } catch (error) {
-            setResponseMessage("Failed to recognice color.");
+        if (checkString(inputString)) {
+            setResponseMessage("Testing...");
+            postData();
         }
+        else {
+            setResponseMessage("Invalid Input string.");
+        }
+    }
+
+    function checkString(input: string): boolean {
+        if (!input) {
+            console.error("Input is empty.");
+            return false;
+        }
+        if (typeof input !== "string") {
+            console.error("Input is not a string.");
+            return false;
+        }
+        if (input.length > 64) {
+            console.error("Input too long. Abborting.");
+            return false;
+        }
+        return true;
     }
 
     async function postData() {
         setSubmitted(true);
-        const result = await axiosPost("/check", { colorValue });
+        const result: Result = await axiosPost("/check", { data: inputString });
         setResponseMessage(result.message);
         if (result.success) {
-            setTimeout(() => {
-                setSubmitted(false);
-                navigate("/");
-            }, 1000);
+            setSubmitted(false);
+            setResponseMessage(String(result.data));
         }
         else {
             handleClear(false);
@@ -70,7 +83,7 @@ function InputPage({ colorValue, setColorValue }: { colorValue: Color | null, se
                     <button type="submit" disabled={(!formChanged || submitted)}>Search</button>
                 </div>
                 <span>{responseMessage ? responseMessage : " "}</span>
-                <span className="color-preview" style={{ backgroundColor: colorValue?.toString()}} />
+                <span className="color-preview" style={{ backgroundColor: colorValue?.toString() }} />
             </form>
         </main>
     );

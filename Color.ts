@@ -18,22 +18,6 @@ function clamp(value: number): number {
     return Math.max(0, Math.min(255, Math.round(value)));
 }
 
-export function checkStringForColorInfo(input: string): Color | null {
-    if (!input) {
-        throw new Error("Input is empty.");
-    }
-    if (typeof input !== "string") {
-        throw new Error("Input is not a string.");
-    }
-    if (input.length > 64) {
-        throw new Error("Input too long. Abborting.");
-    }
-    console.log("Input", input);
-    const output = extractColor(input);
-    console.log("Output", output);
-    return output;
-}
-
 function extractColor(input: string): Color | null {
 
     // Match HEX colors (#RRGGBB or #RGB)
