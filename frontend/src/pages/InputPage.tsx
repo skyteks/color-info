@@ -3,6 +3,7 @@ import "./Form.css";
 import useAxiosAPI, { Result } from "../axiosAPI"
 import { useNavigate } from "react-router-dom";
 import Color from "../../../Color";
+import { toStringRGB } from "../../../backend/src/convert";
 
 function InputPage({ colorValue, setColorValue }: { colorValue: Color | null, setColorValue: Function }) {
     const [formChanged, setFormChanged] = useState(false);
@@ -30,22 +31,19 @@ function InputPage({ colorValue, setColorValue }: { colorValue: Color | null, se
             setResponseMessage("Testing...");
             postData();
         }
-        else {
-            setResponseMessage("Invalid Input string.");
-        }
     }
 
     function checkString(input: string): boolean {
         if (!input) {
-            console.error("Input is empty.");
+            setResponseMessage("Input is empty.");
             return false;
         }
         if (typeof input !== "string") {
-            console.error("Input is not a string.");
+            setResponseMessage("Input is not a string.");
             return false;
         }
         if (input.length > 64) {
-            console.error("Input too long. Abborting.");
+            setResponseMessage("Input too long. Abborting.");
             return false;
         }
         return true;
@@ -57,7 +55,10 @@ function InputPage({ colorValue, setColorValue }: { colorValue: Color | null, se
         setResponseMessage(result.message);
         if (result.success) {
             setSubmitted(false);
-            setResponseMessage(String(result.data));
+            const color:Color = result.data as Color;
+            const colorString = toStringRGB(color);
+
+            setColorValue(colorString);
         }
         else {
             handleClear(false);
@@ -80,7 +81,7 @@ function InputPage({ colorValue, setColorValue }: { colorValue: Color | null, se
                 <input type="text" name="color" onChange={handleFormInput} required={true} defaultValue="" />
                 <div className="form-block">
                     <button type="reset" onClick={() => handleClear(true)}>Clear</button>
-                    <button type="submit" disabled={(!formChanged || submitted)}>Search</button>
+                    <button type="submit" disabled={/*(!formChanged || submitted)*/false}>Search</button>
                 </div>
                 <span>{responseMessage ? responseMessage : " "}</span>
                 <span className="color-preview" style={{ backgroundColor: colorValue?.toString() }} />

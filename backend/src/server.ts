@@ -19,7 +19,7 @@ app.use(cors<Request>(corsOptions));
 app.use(logger("dev"));
 app.use(express.json());
 
-app.use("/api", postgresRoutes);
+app.use("/check", postgresRoutes);
 
 app.get("/hello", (_request: Request, response: Response) => {
     response.send("<h1>Hello World</h1>");
