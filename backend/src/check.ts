@@ -1,39 +1,82 @@
 import Color from "../../Color"
+import prisma from "./middleware/prisma";
+import NamedColor from "../prisma/NamedColor.types";
 
-function testAllChecks(input:string): Color | null {
+const deasync = require("deasync");
+
+function testAllChecks(input: string): Color | null {
     const testHex = checkHexadecimal(input);
     if (testHex) {
         return testHex;
     }
+    console.log("Hex check failed.");
 
     const testRGB = checkRGB(input);
     if (testRGB) {
         return testRGB;
     }
+    console.log("RGB check failed.");
+
 
     const testCustomRGB = checkCustomRGB(input);
     if (testCustomRGB) {
         return testCustomRGB;
     }
+    console.log("Custom RGB check failed.");
 
     const testHSL = checkHSL(input);
     if (testHSL) {
         return testHSL;
     }
+    console.log("HSL check failed.");
 
     const testBinary = checkBinary(input);
     if (testBinary) {
         return testBinary;
     }
+    console.log("Binary check failed.");
 
     const testDecimal = checkDecimal(input);
     if (testDecimal) {
         return testDecimal;
     }
+    console.log("Decimal check failed.");
+
+    const testNamedColor = checkNamedColor(input);
+    if (testNamedColor) {
+        return testNamedColor;
+    }
+    console.log("Named Color check failed.");
 
     return null;
 }
 export default testAllChecks;
+
+function checkNamedColor(input: string): Color | null {
+    let result: Color | null = null;
+    let done = false;
+
+    const promise = prisma.namedColor.findUnique({ where: { name: input } });
+    //const promise:Promise<NamedColor | null> = prisma.$queryRaw`SELECT * FROM "NamedColor" WHERE LOWER("name") = ${input.toLowerCase()}`;
+    promise.then((named: NamedColor | null) => {
+        if (named) {
+            result = new Color(named.r, named.g, named.b);
+        } else {
+            console.log("Could not find Color.");
+        }
+        done = true;
+    })
+        .catch((error: Error) => {
+            console.log("Error searching Named Color in DB.", error);
+            done = true;
+        });
+
+    while (!done) {
+        deasync.runLoopOnce();
+    }
+
+    return result;
+}
 
 function clamp0To255(value: number): number {
     return Math.max(0, Math.min(255, Math.round(value)));

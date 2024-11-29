@@ -3,7 +3,7 @@ import "./Form.css";
 import useAxiosAPI, { Result } from "../axiosAPI"
 import { useNavigate } from "react-router-dom";
 import Color from "../../../Color";
-import { toStringRGB } from "../../../backend/src/convert";
+import { toStringHex, toStringRGB } from "../../../convert";
 
 function InputPage({ colorValue, setColorValue }: { colorValue: Color | null, setColorValue: Function }) {
     const [formChanged, setFormChanged] = useState(false);
@@ -54,11 +54,11 @@ function InputPage({ colorValue, setColorValue }: { colorValue: Color | null, se
         const result: Result = await axiosPost("/check", { data: inputString });
         setResponseMessage(result.message);
         if (result.success) {
+            console.log("Data", result.data);
             setSubmitted(false);
-            const color:Color = result.data as Color;
-            const colorString = toStringRGB(color);
-
-            setColorValue(colorString);
+            const color: Color = result.data as Color;
+            setColorValue(toStringRGB(color));
+            navigate("/color/" + toStringHex(color));
         }
         else {
             handleClear(false);
