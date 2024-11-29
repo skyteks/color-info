@@ -3,9 +3,9 @@ import "./Form.css";
 import useAxiosAPI, { Result } from "../axiosAPI"
 import { useNavigate } from "react-router-dom";
 import Color from "../../../Color";
-import { toStringHex, toStringRGB } from "../../../convert";
+import { toStringHex } from "../../../convert";
 
-function InputPage({ colorValue, setColorValue }: { colorValue: Color | null, setColorValue: Function }) {
+function InputPage() {
     const [formChanged, setFormChanged] = useState(false);
     const { axiosPost } = useAxiosAPI();
     const [responseMessage, setResponseMessage] = useState("");
@@ -51,14 +51,14 @@ function InputPage({ colorValue, setColorValue }: { colorValue: Color | null, se
 
     async function postData() {
         setSubmitted(true);
-        const result: Result = await axiosPost("/check", { data: inputString });
+        console.log("check inputString", { content: inputString });
+        const result: Result = await axiosPost("/check", { content: inputString });
         setResponseMessage(result.message);
         if (result.success) {
-            console.log("Data", result.data);
+            console.log("check content:", result.content);
             setSubmitted(false);
-            const color: Color = result.data as Color;
-            setColorValue(toStringRGB(color));
-            navigate("/color/" + toStringHex(color));
+            const color: Color = result.content as Color;
+            navigate("/color/" + toStringHex(color).substring(1));
         }
         else {
             handleClear(false);
@@ -67,7 +67,6 @@ function InputPage({ colorValue, setColorValue }: { colorValue: Color | null, se
 
     function handleClear(clearResponseMessage: boolean) {
         setFormChanged(false);
-        setColorValue(null);
         if (clearResponseMessage) {
             setResponseMessage("");
         }
@@ -78,13 +77,14 @@ function InputPage({ colorValue, setColorValue }: { colorValue: Color | null, se
         <main id="Form">
             <h1>COLOR INFO</h1>
             <form onSubmit={handleSubmit}>
-                <input type="text" name="color" onChange={handleFormInput} required={true} defaultValue="" />
-                <div className="form-block">
-                    <button type="reset" onClick={() => handleClear(true)}>Clear</button>
-                    <button type="submit" disabled={/*(!formChanged || submitted)*/false}>Search</button>
+                <div className="form-group">
+                    <input type="text" name="color" onChange={handleFormInput} required={true} defaultValue="" />
+                    <div className="form-block">
+                        <button type="reset" onClick={() => handleClear(true)}>Clear</button>
+                        <button type="submit" disabled={/*(!formChanged || submitted)*/false}>Search</button>
+                    </div>
+                    <span>{responseMessage ? responseMessage : " "}</span>
                 </div>
-                <span>{responseMessage ? responseMessage : " "}</span>
-                <span className="color-preview" style={{ backgroundColor: colorValue?.toString() }} />
             </form>
         </main>
     );

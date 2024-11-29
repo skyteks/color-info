@@ -15,7 +15,7 @@ main#Form {
     border: 2px;
     border-radius: 12px;
     border-style: outset;
-    flex-direction: column;
+    flex-direction: row;
 }
 
 #Form .form-block {
@@ -23,6 +23,15 @@ main#Form {
     flex-direction: row;
     gap: 5px;
     flex: 1;
+    justify-content: center;
+}
+
+#Form .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    flex: 1;
+    justify-content: center;
 }
 
 #Form label {
@@ -84,8 +93,9 @@ main#Form {
 
 #Form .color-preview {
     width: 20px;
-    height: 20px;
+    aspect-ratio: 1/1;
     border: 1px solid black;
     margin-left: 10px;
     margin-right: 10px;
+    display: flex;
 }

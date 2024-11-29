@@ -7,43 +7,49 @@ const deasync = require("deasync");
 function testAllChecks(input: string): Color | null {
     const testHex = checkHexadecimal(input);
     if (testHex) {
+        console.log("Hex check success.");
         return testHex;
     }
     console.log("Hex check failed.");
 
     const testRGB = checkRGB(input);
     if (testRGB) {
+        console.log("RGB check success.");
         return testRGB;
     }
     console.log("RGB check failed.");
 
-
     const testCustomRGB = checkCustomRGB(input);
     if (testCustomRGB) {
+        console.log("Custom RGB check success.");
         return testCustomRGB;
     }
     console.log("Custom RGB check failed.");
 
     const testHSL = checkHSL(input);
     if (testHSL) {
+        console.log("HSL check success.");
         return testHSL;
     }
     console.log("HSL check failed.");
 
     const testBinary = checkBinary(input);
     if (testBinary) {
+        console.log("Binary check success.");
         return testBinary;
     }
     console.log("Binary check failed.");
 
     const testDecimal = checkDecimal(input);
     if (testDecimal) {
+        console.log("Decimal check success.");
         return testDecimal;
     }
     console.log("Decimal check failed.");
 
     const testNamedColor = checkNamedColor(input);
     if (testNamedColor) {
+        console.log("Named Color check success.");
         return testNamedColor;
     }
     console.log("Named Color check failed.");
@@ -52,20 +58,47 @@ function testAllChecks(input: string): Color | null {
 }
 export default testAllChecks;
 
+export function searchColorName(color: Color) {
+    let result: String | null = null;
+    let done = false;
+
+    const promise = prisma.namedColor.findFirst({ where: { r: color.r, g: color.g, b: color.b } });
+    promise
+        .then((named: NamedColor | null) => {
+            if (named) {
+                result = named.name;
+            } else {
+                console.log("Could not find Color.");
+            }
+            done = true;
+        })
+        .catch((error: Error) => {
+            console.log("Error searching Color Name in DB.", error);
+            done = true;
+        });
+
+    while (!done) {
+        deasync.runLoopOnce();
+    }
+
+    return result;
+}
+
 function checkNamedColor(input: string): Color | null {
     let result: Color | null = null;
     let done = false;
 
     const promise = prisma.namedColor.findUnique({ where: { name: input } });
     //const promise:Promise<NamedColor | null> = prisma.$queryRaw`SELECT * FROM "NamedColor" WHERE LOWER("name") = ${input.toLowerCase()}`;
-    promise.then((named: NamedColor | null) => {
-        if (named) {
-            result = new Color(named.r, named.g, named.b);
-        } else {
-            console.log("Could not find Color.");
-        }
-        done = true;
-    })
+    promise
+        .then((named: NamedColor | null) => {
+            if (named) {
+                result = new Color(named.r, named.g, named.b);
+            } else {
+                console.log("Could not find Color.");
+            }
+            done = true;
+        })
         .catch((error: Error) => {
             console.log("Error searching Named Color in DB.", error);
             done = true;

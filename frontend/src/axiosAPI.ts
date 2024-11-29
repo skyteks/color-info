@@ -1,5 +1,4 @@
 import axios from "axios";
-import Color from "../../Color";
 
 const backendUri = (import.meta.env.VITE_BACKEND_URI || "http://localhost:3000");
 
@@ -12,7 +11,7 @@ async function axiosGet(uriPath: string): Promise<Result> {
             const responseMessage = response.data.message;
             console.log(">GET", responseMessage);
 
-            return new Result(response.data.color, response.status, responseMessage, true);
+            return new Result(response.data.content, response.status, responseMessage, true);
         })
         .catch((error) => {
             const responseMessage = error.response.data?.message;
@@ -24,7 +23,7 @@ async function axiosGet(uriPath: string): Promise<Result> {
 
 async function axiosPost(uriPath: string, requestBody: object): Promise<Result> {
     if (!requestBody || Object.values(requestBody).some((value) => !value)) {
-        console.error("POST", "Reqest Body has empty values", requestBody);
+        console.log("POST", "Reqest Body has empty values", requestBody);
         return new Result(null, 400, "Reqest Body has empty values", false);
     }
     const uri = backendUri + uriPath;
@@ -35,7 +34,7 @@ async function axiosPost(uriPath: string, requestBody: object): Promise<Result> 
             const responseMessage = response.data.message;
             console.log(">POST", responseMessage);
 
-            return new Result(response.data.color, response.status, responseMessage, true);
+            return new Result(response.data.content, response.status, responseMessage, true);
         })
         .catch((error) => {
             const responseMessage = error.response.data?.message;
@@ -53,12 +52,12 @@ function useAxiosAPI() {
 }
 
 export class Result {
-    data: Color | null;
+    content: object | null;
     statusCode: number;
     message: string;
     success: boolean;
-    constructor(data: Color | null, statusCode: number, message: string, success: boolean) {
-        this.data = data;
+    constructor(content: object | null, statusCode: number, message: string, success: boolean) {
+        this.content = content;
         this.statusCode = statusCode;
         this.message = message;
         this.success = success;
