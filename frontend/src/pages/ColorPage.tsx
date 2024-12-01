@@ -6,6 +6,7 @@ import { Navigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import ContrastBoxPreview from "../components/ContrastBoxPreview";
 import { Colorful, Wheel } from "@uiw/react-color";
+import CopyAbleTextField from "../components/CopyAbleTextField";
 
 function ColorPage() {
     const [colorNames, setColorNames] = useState<string[] | null>(null);
@@ -13,7 +14,6 @@ function ColorPage() {
     const param = useParams()?.hex;
     const colorHex = "#" + param;
     const colorValue = checkHexadecimal(colorHex) as Color;
-    console.log("colorValue", colorValue);
 
     useEffect(() => {
         getData();
@@ -86,7 +86,7 @@ function ColorPage() {
                                 <span>{colorNames === null ? "loading..." : "none found."}</span>
                             ) : (
                                 colorNames.map((name) =>
-                                    <input type="text" disabled={true} value={name} />
+                                    <CopyAbleTextField value={name} key={name} />
                                 )
                             )}
                         </div>
@@ -94,36 +94,36 @@ function ColorPage() {
                     <div className="form-group">
                         <label htmlFor="rgb">RGB:</label>
                         <div className="content">
-                            <input type="text" name="rgb" disabled={true} value={toStringRGB(colorValue)} />
+                            <CopyAbleTextField value={toStringRGB(colorValue)} />
                             <div className="rows">
                                 <span>R</span>
-                                <input type="text" name="rgb-r" disabled={true} value={colorValue.r.toString()} />
+                                <CopyAbleTextField value={colorValue.r.toString()} />
                             </div>
                             <div className="rows">
                                 <span>G</span>
-                                <input type="text" name="rgb-g" disabled={true} value={colorValue.g.toString()} />
+                                <CopyAbleTextField value={colorValue.g.toString()} />
                             </div>
                             <div className="rows">
                                 <span>B</span>
-                                <input type="text" name="rgb-b" disabled={true} value={colorValue.b.toString()} />
+                                <CopyAbleTextField value={colorValue.b.toString()} />
                             </div>
                         </div>
                     </div>
                     <div className="form-group">
                         <label htmlFor="hex">Hex:</label>
                         <div className="content">
-                            <input type="text" name="hex" disabled={true} value={toStringHex(colorValue).toUpperCase()} />
+                            <CopyAbleTextField value={toStringHex(colorValue).toUpperCase()} />
                             <div className="rows">
                                 <span>R</span>
-                                <input type="text" name="rgb-r" disabled={true} value={colorValue.r.toString(16).padStart(2, "0").toUpperCase()} />
+                                <CopyAbleTextField value={colorValue.r.toString(16).padStart(2, "0").toUpperCase()} />
                             </div>
                             <div className="rows">
                                 <span>G</span>
-                                <input type="text" name="rgb-g" disabled={true} value={colorValue.g.toString(16).padStart(2, "0").toUpperCase()} />
+                                <CopyAbleTextField value={colorValue.g.toString(16).padStart(2, "0").toUpperCase()} />
                             </div>
                             <div className="rows">
                                 <span>B</span>
-                                <input type="text" name="rgb-b" disabled={true} value={colorValue.b.toString(16).padStart(2, "0").toUpperCase()} />
+                                <CopyAbleTextField value={colorValue.b.toString(16).padStart(2, "0").toUpperCase()} />
                             </div>
                         </div>
                     </div>
