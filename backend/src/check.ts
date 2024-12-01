@@ -88,8 +88,8 @@ function checkNamedColor(input: string): Color | null {
     let result: Color | null = null;
     let done = false;
 
-    const promise = prisma.namedColor.findUnique({ where: { name: input } });
     //const promise:Promise<NamedColor | null> = prisma.$queryRaw`SELECT * FROM "NamedColor" WHERE LOWER("name") = ${input.toLowerCase()}`;
+    const promise = prisma.namedColor.findUnique({ where: { name: input } });
     promise
         .then((named: NamedColor | null) => {
             if (named) {
