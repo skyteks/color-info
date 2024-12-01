@@ -11,6 +11,7 @@ router.post("/check", (request: Request, response: Response) => {
     console.log("check result:", result);
     if (result) {
         response.status(200).json({ message: "Found.", content: result });
+        return;
     }
     response.status(400).json({ message: "Not a valid color." });
 });
@@ -22,6 +23,7 @@ router.post("/name", (request: Request, response: Response) => {
     console.log("name result:", result);
     if (result) {
         response.status(200).json({ message: "Found.", content: { name: result } });
+        return;
     }
     response.status(400).json({ message: "Not a valid color." });
 });
