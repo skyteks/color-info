@@ -9,6 +9,7 @@
         "preview": "vite preview"
     },
     "dependencies": {
+        "@uiw/react-color": "^2.3.3",
         "axios": "^1.7.8",
         "dotenv": "^16.4.5",
         "react": "^18.3.1",

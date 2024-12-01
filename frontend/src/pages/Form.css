@@ -99,3 +99,24 @@ main#Form {
     margin-right: 10px;
     display: flex;
 }
+
+
+.content {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+
+    width: 10vw;
+    aspect-ratio: 1/1;
+    gap: 5%;
+}
+
+.centered {
+    justify-content: center;
+}
+
+.rows {
+    display: flex;
+    flex-direction: row;
+    gap: 5%;
+}

@@ -5,11 +5,13 @@ import { toStringHex, toStringRGB } from "../../../convert";
 import { Navigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import ContrastBoxPreview from "../components/ContrastBoxPreview";
+import { Colorful, Wheel } from "@uiw/react-color";
 
 function ColorPage() {
-    const [colorName, setColorName] = useState<string | null | undefined>(undefined);
+    const [colorNames, setColorNames] = useState<string[] | null>(null);
     const { axiosPost } = useAxiosAPI();
-    const colorHex = "#" + useParams()?.hex;
+    const param = useParams()?.hex;
+    const colorHex = "#" + param;
     const colorValue = checkHexadecimal(colorHex) as Color;
     console.log("colorValue", colorValue);
 
@@ -42,44 +44,88 @@ function ColorPage() {
     async function getData() {
         const result: Result = await axiosPost("/name", { content: colorValue });
         if (result.success) {
-            const names = result.content as string[] ;
-            console.log("Name", names);
-            setColorName(names.reduce((prev, curr) => prev = prev.concat(" \n", curr)));
+            const names = result.content as string[];
+            setColorNames(names);
         }
         else {
-            setColorName(null);
+            setColorNames([]);
         }
     }
 
-    return !colorValue ? (
-        <h1>FAILED</h1>
-        /*<Navigate to="/" />*/
+    return !param ? (
+        <Navigate to="/" />
     ) : (
         <main id="Form">
             <h1>COLOR INFO</h1>
             <form>
                 <div className="form-group">
                     <div className="form-group">
-                        <label>Preview:</label>
-                        <ContrastBoxPreview color={colorHex} />
+                        <label>Contrast:</label>
+                        <div className="content centered">
+                            <ContrastBoxPreview color={colorHex} />
+                        </div>
                     </div>
                     <div className="form-group">
-                        <label htmlFor="name">CSS Name:</label>
-                        {colorName ? (
-                            <input type="text" name="name" disabled={true} defaultValue={colorName} />
-                        ) : (
-                            <span>{colorName === null ? "none found." : "loading..."}</span>
-                        )}
+                        <label>Preview:</label>
+                        <div className="content centered">
+                            <Colorful color={colorHex} disableAlpha={true} />
+                        </div>
+                    </div>
+                    <div className="form-group">
+                        <label>Spectrum:</label>
+                        <div className="content centered">
+                            <Wheel color={colorHex} />
+                        </div>
                     </div>
                 </div>
                 <div className="form-group">
                     <div className="form-group">
+                        <label>CSS Name:</label>
+                        <div className="content">
+                            {!colorNames ? (
+                                <span>{colorNames === null ? "loading..." : "none found."}</span>
+                            ) : (
+                                colorNames.map((name) =>
+                                    <input type="text" disabled={true} value={name} />
+                                )
+                            )}
+                        </div>
+                    </div>
+                    <div className="form-group">
                         <label htmlFor="rgb">RGB:</label>
-                        <input type="text" name="rgb" disabled={true} defaultValue={toStringRGB(colorValue)} />
+                        <div className="content">
+                            <input type="text" name="rgb" disabled={true} value={toStringRGB(colorValue)} />
+                            <div className="rows">
+                                <span>R</span>
+                                <input type="text" name="rgb-r" disabled={true} value={colorValue.r.toString()} />
+                            </div>
+                            <div className="rows">
+                                <span>G</span>
+                                <input type="text" name="rgb-g" disabled={true} value={colorValue.g.toString()} />
+                            </div>
+                            <div className="rows">
+                                <span>B</span>
+                                <input type="text" name="rgb-b" disabled={true} value={colorValue.b.toString()} />
+                            </div>
+                        </div>
                     </div>
                     <div className="form-group">
                         <label htmlFor="hex">Hex:</label>
-                        <input type="text" name="hex" disabled={true} defaultValue={toStringHex(colorValue)} />
+                        <div className="content">
+                            <input type="text" name="hex" disabled={true} value={toStringHex(colorValue).toUpperCase()} />
+                            <div className="rows">
+                                <span>R</span>
+                                <input type="text" name="rgb-r" disabled={true} value={colorValue.r.toString(16).padStart(2, "0").toUpperCase()} />
+                            </div>
+                            <div className="rows">
+                                <span>G</span>
+                                <input type="text" name="rgb-g" disabled={true} value={colorValue.g.toString(16).padStart(2, "0").toUpperCase()} />
+                            </div>
+                            <div className="rows">
+                                <span>B</span>
+                                <input type="text" name="rgb-b" disabled={true} value={colorValue.b.toString(16).padStart(2, "0").toUpperCase()} />
+                            </div>
+                        </div>
                     </div>
                 </div>
             </form>
