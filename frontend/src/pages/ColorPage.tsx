@@ -4,12 +4,13 @@ import Color from "../../../Color";
 import { toStringHex, toStringRGB } from "../../../convert";
 import { Navigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
+import ContrastBoxPreview from "../components/ContrastBoxPreview";
 
 function ColorPage() {
     const [colorName, setColorName] = useState<string | null | undefined>(undefined);
     const { axiosPost } = useAxiosAPI();
-    const hexParam = useParams()?.hex;
-    const colorValue = hexParam ? checkHexadecimal("#" + hexParam) as Color : null;
+    const colorHex = "#" + useParams()?.hex;
+    const colorValue = checkHexadecimal(colorHex) as Color;
     console.log("colorValue", colorValue);
 
     useEffect(() => {
@@ -41,9 +42,9 @@ function ColorPage() {
     async function getData() {
         const result: Result = await axiosPost("/name", { content: colorValue });
         if (result.success) {
-            const { name } = result.content as { name: string };
-            console.log("Name", name);
-            setColorName(name);
+            const names = result.content as string[] ;
+            console.log("Name", names);
+            setColorName(names.reduce((prev, curr) => prev = prev.concat(" \n", curr)));
         }
         else {
             setColorName(null);
@@ -60,7 +61,7 @@ function ColorPage() {
                 <div className="form-group">
                     <div className="form-group">
                         <label>Preview:</label>
-                        <span className="color-preview" style={{ backgroundColor: toStringRGB(colorValue) }} />
+                        <ContrastBoxPreview color={colorHex} />
                     </div>
                     <div className="form-group">
                         <label htmlFor="name">CSS Name:</label>

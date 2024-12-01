@@ -19,10 +19,10 @@ router.post("/check", (request: Request, response: Response) => {
 router.post("/name", (request: Request, response: Response) => {
     const { content }: { content: Color } = request.body;
     console.log("name data:", content);
-    const result: string | null = searchColorName(content);
+    const result: string[] = searchColorName(content);
     console.log("name result:", result);
     if (result) {
-        response.status(200).json({ message: "Found.", content: { name: result } });
+        response.status(200).json({ message: "Found.", content: result });
         return;
     }
     response.status(400).json({ message: "Not a valid color." });

@@ -58,15 +58,15 @@ function testAllChecks(input: string): Color | null {
 }
 export default testAllChecks;
 
-export function searchColorName(color: Color) {
-    let result: String | null = null;
+export function searchColorName(color: Color):string[] {
+    let result: string[] = [];
     let done = false;
 
-    const promise = prisma.namedColor.findFirst({ where: { r: color.r, g: color.g, b: color.b } });
+    const promise = prisma.namedColor.findMany({ where: { r: color.r, g: color.g, b: color.b } });
     promise
-        .then((named: NamedColor | null) => {
+        .then((named: NamedColor[] | null) => {
             if (named) {
-                result = named.name;
+                result = named.map((singleNamed) => singleNamed.name) as string[];
             } else {
                 console.log("Could not find Color.");
             }
