@@ -1,0 +1,39 @@
+.border-anim {
+    position: relative;
+    --border-anim-radius: 10px;
+    border-radius: var(--border-anim-radius);
+}
+
+@property --border-anim-angle {
+    syntax: "<angle>";
+    initial-value: 0deg;
+    inherits: false;
+}
+
+.border-anim::after, .border-anim::before {
+    content: "";
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 50%;
+    left: 50%;
+    translate: -50% -50%;
+    z-index: -1;
+    padding: 10px;
+    border-radius: var(--border-anim-radius);
+    background-image: conic-gradient(from var(--border-anim-angle),red, orange, yellow, green, cyan, blue, purple, red);
+    animation: 6s spin linear infinite;
+}
+
+.border-anim::before {
+    filter: blur(1.5rem);
+}
+
+@keyframes spin{
+    from{
+        --border-anim-angle: 0deg;
+    }
+    to {
+        --border-anim-angle: 360deg;
+    }
+}

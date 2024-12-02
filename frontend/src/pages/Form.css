@@ -12,9 +12,6 @@ main#Form {
     max-width: 1000px;
     display: flex;
     gap: 20px;
-    border: 2px;
-    border-radius: 12px;
-    border-style: outset;
     flex-direction: row;
 }
 

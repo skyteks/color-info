@@ -57,7 +57,7 @@ function ColorPage() {
     ) : (
         <main id="Form">
             <h1>COLOR INFO</h1>
-            <form>
+            <form className="border-anim">
                 <div className="form-group">
                     <div className="form-group">
                         <label>Contrast:</label>

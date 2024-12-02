@@ -1,6 +1,7 @@
 import { Route, Routes } from "react-router-dom";
 import InputPage from "./pages/InputPage";
 import ColorPage from "./pages/ColorPage";
+import "./BorderAnim.css";
 
 function App() {
 

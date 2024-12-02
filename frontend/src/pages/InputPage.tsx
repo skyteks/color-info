@@ -76,7 +76,7 @@ function InputPage() {
     return (
         <main id="Form">
             <h1>COLOR INFO</h1>
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={handleSubmit} className="border-anim">
                 <div className="form-group">
                     <input type="text" name="color" onChange={handleFormInput} required={true} defaultValue="" />
                     <div className="form-block">
