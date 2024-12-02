@@ -1,4 +1,3 @@
-import Color from "../../../Color";
 import "./ContrastBoxPreview.css";
 
 function ContrastBoxPreview({ color }: { color: string }) {

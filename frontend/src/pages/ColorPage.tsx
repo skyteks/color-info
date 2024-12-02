@@ -51,7 +51,7 @@ function ColorPage() {
             setColorNames([]);
         }
     }
-
+    console.log("Names", colorNames, (!colorNames) == false);
     return !param ? (
         <Navigate to="/" />
     ) : (
@@ -88,7 +88,7 @@ function ColorPage() {
                     <div className="form-group">
                         <label>CSS Name:</label>
                         <div className="content">
-                            {!colorNames ? (
+                            {!colorNames || colorNames.length == 0 ? (
                                 <span>{colorNames === null ? "loading..." : "none found."}</span>
                             ) : (
                                 colorNames.map((name) =>
@@ -135,7 +135,7 @@ function ColorPage() {
                         </div>
                     </div>
                     <div className="form-group">
-                    <label htmlFor="hex">Binary:</label>
+                        <label htmlFor="hex">Binary:</label>
                         <div className="content">
                             <CopyAbleTextField value={toStringBinary(colorValue)} />
                             <div className="rows">
