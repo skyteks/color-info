@@ -1,7 +1,7 @@
 import "./Form.css";
 import useAxiosAPI, { Result } from "../axiosAPI"
 import Color from "../../../Color";
-import { toStringHex, toStringRGB } from "../../../convert";
+import { toStringBinary, toStringDecimal, toStringHex, toStringHSL, toStringRGB } from "../../../convert";
 import { Navigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import ContrastBoxPreview from "../components/ContrastBoxPreview";
@@ -77,6 +77,12 @@ function ColorPage() {
                             <Wheel color={colorHex} />
                         </div>
                     </div>
+                    <div className="form-group">
+                        <label htmlFor="rgb">HSL:</label>
+                        <div className="content">
+                            <CopyAbleTextField value={toStringHSL(colorValue)} />
+                        </div>
+                    </div>
                 </div>
                 <div className="form-group">
                     <div className="form-group">
@@ -107,6 +113,7 @@ function ColorPage() {
                                 <span>B</span>
                                 <CopyAbleTextField value={colorValue.b.toString()} />
                             </div>
+                            <CopyAbleTextField value={toStringDecimal(colorValue).toUpperCase()} />
                         </div>
                     </div>
                     <div className="form-group">
@@ -124,6 +131,24 @@ function ColorPage() {
                             <div className="rows">
                                 <span>B</span>
                                 <CopyAbleTextField value={colorValue.b.toString(16).padStart(2, "0").toUpperCase()} />
+                            </div>
+                        </div>
+                    </div>
+                    <div className="form-group">
+                    <label htmlFor="hex">Binary:</label>
+                        <div className="content">
+                            <CopyAbleTextField value={toStringBinary(colorValue)} />
+                            <div className="rows">
+                                <span>R</span>
+                                <CopyAbleTextField value={colorValue.r.toString(2).padStart(8, "0").toUpperCase()} />
+                            </div>
+                            <div className="rows">
+                                <span>G</span>
+                                <CopyAbleTextField value={colorValue.g.toString(2).padStart(8, "0").toUpperCase()} />
+                            </div>
+                            <div className="rows">
+                                <span>B</span>
+                                <CopyAbleTextField value={colorValue.b.toString(2).padStart(8, "0").toUpperCase()} />
                             </div>
                         </div>
                     </div>

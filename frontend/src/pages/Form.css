@@ -106,7 +106,7 @@ main#Form {
     align-items: center;
     flex-direction: column;
 
-    width: 10vw;
+    width: 200px;
     aspect-ratio: 1/1;
     gap: 5%;
 }
